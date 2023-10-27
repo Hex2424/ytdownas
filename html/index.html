@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask app</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <form method="POST" action="{{ url_for('handle_post') }}">
+        <div class="form">
+            <div class="title">Hello dear,</div>
+            <div class="subtitle" id="subtitle">Enter song name !</div>
+            <div class="input-container ic1">
+                <input id="input" class="input" name="input" type="text" placeholder=" " />
+                <div class="cut"></div>
+                <label for="input" class="placeholder">Song name</label>
+            </div>
+		<div>
+            <div class="input-container ic2">
+                <input id="seed" class="input" name="seed" type="number" min="1" max="100" placeholder="" />
+                <div class="cut"></div>
+                <label for="seed" class="placeholder">Song seed (default 1)</label>
+            </div>
+			<!-- <button type="" class="submit s2">Randomize</button> -->
+		<div>
+            <div class="subtitle" id="debug-log"></div>
+            <button type="submit" class="submit" onclick="clearSubtitle()">Download</button>
+        </div>
+    </form>
+
+    <script>
+        function clearSubtitle() {
+            document.getElementById('debug-log').innerText = ''; // Clear the subtitle text
+        }
+
+        function pollDebugLog() {
+            fetch('/get_debug_log')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('debug-log').innerText = data;
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Poll for debug log updates every 5 seconds (adjust the interval as needed)
+        setInterval(pollDebugLog, 500);
+    </script>
+</body>
+</html>
